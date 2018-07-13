@@ -108,23 +108,39 @@ For example, assume you have a domain name called `my-app.work` and you already 
 
 To map the `ui.my-app.work` domain for one of the deployment URLs of your app, visit your DNS provider and add a CNAME record for `ui.my-app.work` pointing to `alias.zeit.co`.
 
-After that, run the following command:
+After that, run the following command to register your external domain (e.g., not hosted by zeit.world) with zeit.
 
-<TerminalInput>now alias https://my-web-app-avvuiuuwto.now.sh ui.my-app.work</TerminalInput>
+<TerminalInput>now domain add -e my-app.work</TerminalInput>
 
-You will then have an error like this:
+You will be prompted to now create a new TXT record on your domain server:
+<pre>
+ Are you sure you want to add "my-app.work"? [y|N] 
+⠋ Adding domain my-app.work under zeit-username
+> Error! We couldn't verify the domain my-app.work.
 
-<Image
-  src={asset(`${IMAGE_ASSETS_URL}/docs/assign-a-domain-name/alias-error.png`)}
-  width={650}
-  height={412}
-  caption="Error message you'll get when trying to alias a domain for the first time."
-/>
+  Please make sure that your nameservers point to zeit.world.
+  Examples: (full list at https://zeit.world)
+    a.zeit.world        96.45.80.1
+    b.zeit.world        46.31.236.1
+    c.zeit.world        43.247.170.1
 
-&#8203;<Now color="000"/> wants to verify the ownership of your domain. That's why it throws an error.
+  As an alternative, you can add following records to your DNS settings:
+    name        type         value
+    _now        TXT          0a2186c78...random-crypto-string....36f6
+                ALIAS        alias.zeit.co  
+</pre>
 
-* Next, add the TXT record as mentioned above error message.
-* Run the `now alias` command again:
+After you have created the TXT record in your dns configuration, you can now repeat the same command:
+
+<TerminalInput>now domain add my-app.work</TerminalInput>
+And you should get a success message like this:
+<pre>
+> Are you sure you want to add "my-app.work"? [y|N] 
+⠋ Adding domain my-app.work under zeit-username
+> Success! Domain my-app.work was added. [850ms]
+</pre>
+
+Once that is configured, you should be able to link any deployed alias to your new subdomain:
 
 <TerminalInput>now alias https://my-web-app-avvuiuuwto.now.sh ui.my-app.work</TerminalInput>
 
